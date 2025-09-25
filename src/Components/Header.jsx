@@ -1,10 +1,25 @@
-import { Button, Navbar, TextInput,NavbarCollapse,NavbarLink, NavbarToggle } from "flowbite-react";
+import {
+  Button,
+  Navbar,
+  TextInput,
+  NavbarCollapse,
+  NavbarLink,
+  NavbarToggle,
+  Dropdown,
+  Avatar,
+  DropdownHeader,
+  DropdownItem,
+  DropdownDivider,
+} from "flowbite-react";
 import React from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
-import { Link,useLocation} from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
+
 const Header = () => {
-    const path=useLocation().pathname;
+  const path = useLocation().pathname;
+  const { currentUser } = useSelector((state) => state.user);
   return (
     <div>
       <Navbar className="border-b-2">
@@ -25,37 +40,65 @@ const Header = () => {
             className="hidden lg:inline"
           />
         </form>
-        <Button className="w-12 h-10 lg:hidden" color='gray'>
-            <AiOutlineSearch/>
+        <Button className="w-12 h-10 lg:hidden" color="gray">
+          <AiOutlineSearch />
         </Button>
         <div className="flex gap-2 md:order-2">
-            <Button className="w-12 h-10 hidden sm:inline" color='gray' pill>  
-                <FaMoon/>
-            </Button>
-            <Link to='/signin'>
-            <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:bg-gradient-to-l focus:ring-purple-200 dark:focus:ring-purple-800" outline>
-        Sign-In
-      </Button>
+          <Button className="w-12 h-10 hidden sm:inline" color="gray" pill>
+            <FaMoon />
+          </Button>
+          {currentUser ? (
+            <Dropdown
+              className=""
+              arrowIcon={false}
+              inline
+              label={
+                <Avatar alt="user" img={currentUser.profilePicture} rounded />
+              }
+            >
+              <DropdownHeader>
+                <span className="block text-sm">
+                  Name:{currentUser.username}
+                </span>
+              </DropdownHeader>
+              <DropdownDivider />
+              <DropdownHeader>
+                <span className="block text-sm font-medium truncate">
+                  email:{currentUser.email}
+                </span>
+              </DropdownHeader>
+              <DropdownHeader>
+                <Link to="/dashboard?tab=profile">
+                  <DropdownItem>Profile</DropdownItem>
+                </Link>
+                <DropdownDivider />
+                <DropdownItem>Sign out</DropdownItem>
+              </DropdownHeader>
+            </Dropdown>
+          ) : (
+            <Link to="/signin">
+              <Button
+                className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:bg-gradient-to-l focus:ring-purple-200 dark:focus:ring-purple-800"
+                outline
+              >
+                Sign-In
+              </Button>
             </Link>
-            <NavbarToggle/>
+          )}
+
+          <NavbarToggle />
         </div>
-          <NavbarCollapse>
-                <NavbarLink active={path==='/'} as={'div'}>
-                    <Link to='/'>
-                    Home
-                    </Link>
-                </NavbarLink>
-                  <NavbarLink  active={path==='/about'} as={'div'}>
-                    <Link to='/about'>
-                    About
-                    </Link>
-                </NavbarLink>
-                  <NavbarLink  active={path==='/project'} as={'div'}>
-                    <Link to='/project'>
-                    Project
-                    </Link>
-                </NavbarLink>
-            </NavbarCollapse>
+        <NavbarCollapse>
+          <NavbarLink active={path === "/"} as={"div"}>
+            <Link to="/">Home</Link>
+          </NavbarLink>
+          <NavbarLink active={path === "/about"} as={"div"}>
+            <Link to="/about">About</Link>
+          </NavbarLink>
+          <NavbarLink active={path === "/project"} as={"div"}>
+            <Link to="/project">Project</Link>
+          </NavbarLink>
+        </NavbarCollapse>
       </Navbar>
     </div>
   );
