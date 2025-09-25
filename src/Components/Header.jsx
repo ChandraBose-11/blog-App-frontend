@@ -14,11 +14,12 @@ import {
 import React from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
-
+import { toggleTheme } from "../Redux/Slice/themeSlice.js";
 const Header = () => {
   const path = useLocation().pathname;
+  const dispatch = useDispatch()
   const { currentUser } = useSelector((state) => state.user);
   return (
     <div>
@@ -44,7 +45,7 @@ const Header = () => {
           <AiOutlineSearch />
         </Button>
         <div className="flex gap-2 md:order-2">
-          <Button className="w-12 h-10 hidden sm:inline" color="gray" pill>
+          <Button className="w-12 h-10 hidden sm:inline" color="gray" pill onClick={()=>dispatch(toggleTheme())}>
             <FaMoon />
           </Button>
           {currentUser ? (
