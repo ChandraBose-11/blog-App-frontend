@@ -133,6 +133,7 @@ const DashProfile = () => {
         console.log(data.message);
       }else{
 dispatch(signoutSuccess())
+navigate('/signin')
       }
     } catch (error) {
       console.log(error.message);
