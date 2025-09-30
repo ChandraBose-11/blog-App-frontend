@@ -15,12 +15,31 @@ import React from "react";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
 import { useSelector,useDispatch } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toggleTheme } from "../Redux/Slice/themeSlice.js";
+import { signoutSuccess } from "../Redux/Slice/userSlice.js";
 const Header = () => {
   const path = useLocation().pathname;
   const dispatch = useDispatch()
+  const Navigate = useNavigate()
   const { currentUser } = useSelector((state) => state.user);
+ const handleSignout=async()=>{
+     try {
+       const res= await fetch('/api/user/signout',{
+            method:'POST'
+       })
+       const data=await res.json()
+       if(!res.ok){
+         console.log(data.message);
+       }else{
+ dispatch(signoutSuccess())
+ Navigate('/signin')
+       }
+     } catch (error) {
+       console.log(error.message);
+       
+     }
+    }
   return (
     <div>
       <Navbar className="border-b-2">
@@ -73,7 +92,7 @@ const Header = () => {
                   <DropdownItem>Profile</DropdownItem>
                 </Link>
                 <DropdownDivider />
-                <DropdownItem>Sign out</DropdownItem>
+                <DropdownItem onClick={handleSignout}>Sign out</DropdownItem>
               </DropdownHeader>
             </Dropdown>
           ) : (

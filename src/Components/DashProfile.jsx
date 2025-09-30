@@ -15,6 +15,7 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signoutSuccess
 } from "../Redux/Slice/userSlice";
 import axios from "axios";
 import { CircularProgressbar } from "react-circular-progressbar";
@@ -122,7 +123,22 @@ const DashProfile = () => {
       dispatch(updateFailure(msg));
     }
   };
-
+   const handleSignout=async()=>{
+    try {
+      const res= await fetch('/api/user/signout',{
+           method:'POST'
+      })
+      const data=await res.json()
+      if(!res.ok){
+        console.log(data.message);
+      }else{
+dispatch(signoutSuccess())
+      }
+    } catch (error) {
+      console.log(error.message);
+      
+    }
+   }
   const handleDeleteUser = async () => {
     setShowModal(false);
     try {
@@ -145,6 +161,8 @@ const DashProfile = () => {
       dispatch(deleteUserFailure(error.message));
     }
   };
+
+ 
 
   if (!currentUser) return <div className="text-center p-5">Loading...</div>;
 
@@ -229,7 +247,7 @@ const DashProfile = () => {
         <span onClick={() => setShowModal(true)} className="cursor-pointer">
           Delete Account
         </span>
-        <span className="cursor-pointer">Sign Out</span>
+        <span onClick={handleSignout} className="cursor-pointer">Sign Out</span>
       </div>
  {/* ✅ Alerts */}
       {success && (
