@@ -1,20 +1,33 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Alert, Button, TextInput } from "flowbite-react";
+import {
+  Alert,
+  Button,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  TextInput,
+} from "flowbite-react";
 import {
   updateStart,
   updateSuccess,
   updateFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../Redux/Slice/userSlice";
 import axios from "axios";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
 
 const DashProfile = () => {
+  const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const filePickerRef = useRef();
-
+  const [showModal, setShowModal] = useState(null);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setImageFileUrl] = useState(
     currentUser?.profilePicture || ""
@@ -26,6 +39,7 @@ const DashProfile = () => {
     password: "",
   });
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null); // ✅ NEW
 
   useEffect(() => {
     if (currentUser) {
@@ -55,8 +69,22 @@ const DashProfile = () => {
     e.preventDefault();
     if (!currentUser) return;
 
+    // ✅ Check if anything has changed
+  const isSameUsername = formData.username === currentUser.username;
+  const isSameEmail = formData.email === currentUser.email;
+  const isPasswordEmpty = !formData.password;
+  const isSameImage = !imageFile; // only true if no new file selected
+
+  if (isSameUsername && isSameEmail && isPasswordEmpty && isSameImage) {
+    setError(null);
+    setSuccess("No changes detected ⚠️");
+    return;
+  }
+
     try {
       dispatch(updateStart());
+      setError(null);
+      setSuccess(null); // reset before new request
 
       const data = new FormData();
       data.append("username", formData.username);
@@ -83,11 +111,38 @@ const DashProfile = () => {
       // Clear password and file
       setImageFile(null);
       setFormData((prev) => ({ ...prev, password: "" }));
-      setError(null);
+       setSuccess("Profile updated successfully ✅");
+      // setError(null);
     } catch (err) {
       console.error(err);
-      setError(err.response?.data?.message || err.message || "Update failed");
-      dispatch(updateFailure(err.response?.data?.message || err.message));
+      // setError(err.response?.data?.message || err.message || "Update failed");
+      // dispatch(updateFailure(err.response?.data?.message || err.message));
+        const msg = err.response?.data?.message || err.message || "Update failed";
+      setError(msg);
+      dispatch(updateFailure(msg));
+    }
+  };
+
+  const handleDeleteUser = async () => {
+    setShowModal(false);
+    try {
+      dispatch(deleteUserStart());
+
+      const res = await fetch(`/api/user/delete/${currentUser._id}`, {
+        method: "DELETE",
+        credentials: "include", // 🔑 send cookies/session
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        dispatch(deleteUserFailure(data.message));
+      } else {
+        dispatch(deleteUserSuccess(data));
+         navigate("/signup");
+      }
+    } catch (error) {
+      dispatch(deleteUserFailure(error.message));
     }
   };
 
@@ -170,13 +225,48 @@ const DashProfile = () => {
           Update
         </Button>
       </form>
-       <div className="text-red-500 flex justify-between mt-5">
-        <span className='cursor-pointer'>Delete Account</span>
-        <span className='cursor-pointer'>Sign Out</span>
+      <div className="text-red-500 flex justify-between mt-5">
+        <span onClick={() => setShowModal(true)} className="cursor-pointer">
+          Delete Account
+        </span>
+        <span className="cursor-pointer">Sign Out</span>
       </div>
+ {/* ✅ Alerts */}
+      {success && (
+        <Alert color="success" className="mt-5">
+          {success}
+        </Alert>
+      )}
+      {error && (
+        <Alert color="failure" className="mt-5">
+          {error}
+        </Alert>
+      )}
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md"
+      >
+        <ModalHeader />
+        <ModalBody>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-3 text-lg text-gray-500 dark:text-gray-400">
+              Are you sure you want to delete your account?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="red" onClick={handleDeleteUser}>
+                Yes,I'm sure
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                No,Cancel
+              </Button>
+            </div>
+          </div>
+        </ModalBody>
+      </Modal>
     </div>
-
-    
   );
 };
 
