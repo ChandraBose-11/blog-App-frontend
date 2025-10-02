@@ -21,7 +21,7 @@ import axios from "axios";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const DashProfile = () => {
   const navigate = useNavigate();
@@ -242,7 +242,23 @@ navigate('/signin')
           pill
         >
           Update
+          {/* {loading? 'Loading...' : 'Update'} */}
         </Button>
+        {
+          currentUser.isAdmin && (
+            <Link to={'/create-post'}>
+            <Button
+          type="button"
+          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white w-full hover:bg-gradient-to-l "
+          outline
+          pill
+        >
+          Create a Post
+        </Button>
+            </Link>
+            
+          )
+        }
       </form>
       <div className="text-red-500 flex justify-between mt-5">
         <span onClick={() => setShowModal(true)} className="cursor-pointer">

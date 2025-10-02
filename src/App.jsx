@@ -8,7 +8,9 @@ import Signin from './Pages/Signin';
 import Signup from './Pages/Signup';
 import Header from './Components/Header';
 import FooterComp from './Components/FooterComp';
-
+import PrivateRoute from './Components/PrivateRoute'
+import OnlyAdminPrivateRoute from './Components/OnlyAdminPrivateRoute';
+import CreatePost from './Pages/CreatePost'
 
 const App = () => {
   return (
@@ -18,10 +20,17 @@ const App = () => {
      <Routes>
       <Route path='/' element={<Home/>}/>
       <Route path='/about' element={<About/>}/>
-      <Route path='/dashboard' element={<Dashboard/>}/>
+      <Route element={<PrivateRoute/>}>
+         <Route path='/dashboard' element={<Dashboard/>}/>
+      </Route>
+      <Route element={<OnlyAdminPrivateRoute/>}>
+      <Route path='/create-post' element={<CreatePost/>}/>
+      </Route>
+      
       <Route path='/project' element={<Project/>}/>
       <Route path='/signin' element={<Signin/>}/>
       <Route path='/signup' element={<Signup/>}/>
+
      </Routes>
     <FooterComp/>
      </BrowserRouter>
