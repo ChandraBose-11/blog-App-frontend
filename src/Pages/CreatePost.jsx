@@ -68,26 +68,30 @@ const CreatePost = () => {
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         {/* Title & Category */}
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
-  <TextInput
-    type="text"
-    placeholder="Title"
-    required
-    className="flex-1 min-w-0"
-    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-  />
-  <Select
-    className="flex-1 min-w-0"
-    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-  >
-    <option value="Uncategoried">Select A Category</option>
-    <option value="technology">Technology</option>
-    <option value="lifestyle">Lifestyle</option>
-    <option value="business">Business & Finance</option>
-    <option value="education">Education</option>
-    <option value="entertainment">Entertainment</option>
-    <option value="news">News</option>
-  </Select>
-</div>
+          <TextInput
+            type="text"
+            placeholder="Title"
+            required
+            className="flex-1 min-w-0"
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
+          />
+          <Select
+            className="flex-1 min-w-0"
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
+          >
+            <option value="Uncategoried">Select A Category</option>
+            <option value="technology">Technology</option>
+            <option value="lifestyle">Lifestyle</option>
+            <option value="business">Business & Finance</option>
+            <option value="education">Education</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="news">News</option>
+          </Select>
+        </div>
 
         {/* Image Upload */}
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
@@ -98,12 +102,21 @@ const CreatePost = () => {
           />
           {uploadProgress !== null && (
             <div className="w-16 h-16">
-              <CircularProgressbar value={uploadProgress} text={`${uploadProgress}%`} />
+              <CircularProgressbar
+                value={uploadProgress}
+                text={`${uploadProgress}%`}
+              />
             </div>
           )}
         </div>
 
-        {file && <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-72 object-cover" />}
+        {file && (
+          <img
+            src={URL.createObjectURL(file)}
+            alt="preview"
+            className="w-full h-72 object-cover"
+          />
+        )}
 
         {/* Post Content */}
         <ReactQuill
@@ -115,13 +128,24 @@ const CreatePost = () => {
         />
 
         {/* Submit button */}
-        <Button type="submit" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+        <Button
+          type="submit"
+          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+        >
           Publish
         </Button>
 
         {/* Alerts */}
-        {publishError && <Alert className="mt-5" color="failure">{publishError}</Alert>}
-        {successMessage && <Alert className="mt-5" color="success">{successMessage}</Alert>}
+        {publishError && (
+          <Alert className="mt-5" color="failure">
+            {publishError}
+          </Alert>
+        )}
+        {successMessage && (
+          <Alert className="mt-5" color="success">
+            {successMessage}
+          </Alert>
+        )}
       </form>
     </div>
   );
