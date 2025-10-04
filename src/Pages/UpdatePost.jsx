@@ -1,19 +1,41 @@
 import { Button, FileInput, Select, Alert, TextInput } from "flowbite-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill-new";
 import "react-quill-new/dist/quill.snow.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import axios from "axios";
 
-const CreatePost = () => {
+const UpdatePost = () => {
+  const { postId } = useParams();
   const navigate = useNavigate();
+
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(null);
   const [formData, setFormData] = useState({ title: "", content: "", category: "Uncategoried" });
   const [publishError, setPublishError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+
+  // Prefill post data
+  useEffect(() => {
+    if (!postId) return;
+    const fetchPost = async () => {
+      try {
+        const res = await axios.get(`/api/post/${postId}`);
+        const post = res.data;
+        setFormData({
+          title: post.title,
+          content: post.content,
+          category: post.category || "Uncategoried",
+        });
+        if (post.image) setFile(post.image);
+      } catch (err) {
+        setPublishError("Failed to fetch post data");
+      }
+    };
+    fetchPost();
+  }, [postId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,23 +47,21 @@ const CreatePost = () => {
       data.append("title", formData.title);
       data.append("content", formData.content);
       data.append("category", formData.category);
-      if (file) data.append("image", file);
+      if (file && file instanceof File) data.append("image", file);
 
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", "/api/post/create");
+      xhr.open("PUT", `/api/post/update/${postId}`);
 
       xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) {
-          setUploadProgress(Math.round((event.loaded / event.total) * 100));
-        }
+        if (event.lengthComputable) setUploadProgress(Math.round((event.loaded / event.total) * 100));
       };
 
       xhr.onload = () => {
         const res = JSON.parse(xhr.responseText);
-        if (xhr.status !== 201) {
+        if (xhr.status !== 200) {
           setPublishError(res.message);
         } else {
-          setSuccessMessage("✅ Post created successfully!");
+          setSuccessMessage("✅ Post updated successfully!");
           setTimeout(() => navigate(`/post/${res.slug}`), 1500);
         }
         setUploadProgress(null);
@@ -61,9 +81,8 @@ const CreatePost = () => {
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">Create Post</h1>
+      <h1 className="text-center text-3xl my-7 font-semibold">Update Post</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        {/* Title & Category */}
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
             type="text"
@@ -88,7 +107,6 @@ const CreatePost = () => {
           </Select>
         </div>
 
-        {/* Image Upload */}
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
           <FileInput type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
           {uploadProgress !== null && (
@@ -99,10 +117,13 @@ const CreatePost = () => {
         </div>
 
         {file && (
-          <img src={URL.createObjectURL(file)} alt="preview" className="w-full h-72 object-cover" />
+          <img
+            src={file instanceof File ? URL.createObjectURL(file) : file}
+            alt="preview"
+            className="w-full h-72 object-cover"
+          />
         )}
 
-        {/* Post Content */}
         <ReactQuill
           theme="snow"
           placeholder="Write something..."
@@ -113,7 +134,7 @@ const CreatePost = () => {
         />
 
         <Button type="submit" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
-          Publish
+          Update
         </Button>
 
         {publishError && <Alert className="mt-5" color="failure">{publishError}</Alert>}
@@ -123,4 +144,4 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default UpdatePost;
