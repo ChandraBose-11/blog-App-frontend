@@ -13,7 +13,11 @@ const UpdatePost = () => {
 
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(null);
-  const [formData, setFormData] = useState({ title: "", content: "", category: "Uncategoried" });
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    category: "Uncategoried",
+  });
   const [publishError, setPublishError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
@@ -53,7 +57,8 @@ const UpdatePost = () => {
       xhr.open("PUT", `/api/post/update/${postId}`);
 
       xhr.upload.onprogress = (event) => {
-        if (event.lengthComputable) setUploadProgress(Math.round((event.loaded / event.total) * 100));
+        if (event.lengthComputable)
+          setUploadProgress(Math.round((event.loaded / event.total) * 100));
       };
 
       xhr.onload = () => {
@@ -90,12 +95,16 @@ const UpdatePost = () => {
             value={formData.title}
             required
             className="flex-1 min-w-0"
-            onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, title: e.target.value })
+            }
           />
           <Select
             className="flex-1 min-w-0"
             value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, category: e.target.value })
+            }
           >
             <option value="Uncategoried">Select A Category</option>
             <option value="technology">Technology</option>
@@ -108,10 +117,17 @@ const UpdatePost = () => {
         </div>
 
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
-          <FileInput type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} />
+          <FileInput
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files[0])}
+          />
           {uploadProgress !== null && (
             <div className="w-16 h-16">
-              <CircularProgressbar value={uploadProgress} text={`${uploadProgress}%`} />
+              <CircularProgressbar
+                value={uploadProgress}
+                text={`${uploadProgress}%`}
+              />
             </div>
           )}
         </div>
@@ -133,12 +149,23 @@ const UpdatePost = () => {
           onChange={(value) => setFormData({ ...formData, content: value })}
         />
 
-        <Button type="submit" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+        <Button
+          type="submit"
+          className="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+        >
           Update
         </Button>
 
-        {publishError && <Alert className="mt-5" color="failure">{publishError}</Alert>}
-        {successMessage && <Alert className="mt-5" color="success">{successMessage}</Alert>}
+        {publishError && (
+          <Alert className="mt-5" color="failure">
+            {publishError}
+          </Alert>
+        )}
+        {successMessage && (
+          <Alert className="mt-5" color="success">
+            {successMessage}
+          </Alert>
+        )}
       </form>
     </div>
   );
