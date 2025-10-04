@@ -21,17 +21,28 @@ const App = () => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
+          <Route path="/project" element={<Project />} />
+          <Route path="/signin" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
+
+          {/* Protected Route for logged-in users */}
           <Route element={<PrivateRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
+          {/* Protected Route for Admin users */}
           <Route element={<OnlyAdminPrivateRoute />}>
             <Route path="/create-post" element={<CreatePost />} />
             <Route path="/update-post/:postId" element={<UpdatePost />} />
           </Route>
-
-          <Route path="/project" element={<Project />} />
-          <Route path="/signin" element={<Signin />} />
-          <Route path="/signup" element={<Signup />} />
+          {/* Catch-all 404 route */}
+          <Route
+            path="*"
+            element={
+              <h1 className="text-center mt-20 text-3xl">
+                404 - Page Not Found
+              </h1>
+            }
+          />
         </Routes>
         <FooterComp />
       </BrowserRouter>
