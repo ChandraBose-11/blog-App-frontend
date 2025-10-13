@@ -1,44 +1,48 @@
 import React, { useState } from "react";
 import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useDispatch,useSelector} from "react-redux";
-import { signInStart,signInSuccess,signInFailure } from "../Redux/Slice/userSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import { signInStart, signInSuccess, signInFailure } from "../Redux/Slice/userSlice.js";
 import OAuth from "../Components/OAuth.jsx";
+
 const Signin = () => {
-  const [formData, setformdata] = useState({});
-  const {loading,error:errorMessage}=useSelector(state=>state.user)
-  const dispatch=useDispatch();
+  const [formData, setFormData] = useState({});
+  const { loading, error: errorMessage } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const handleChange = (e) => {
-    // console.log(e.target.value);
-    setformdata({ ...formData, [e.target.id]: e.target.value.trim() });
+    setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
-  // console.log(formData);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!formData.email || !formData.password) {
       return dispatch(signInFailure("Please fill out all fields"));
     }
+
     try {
       dispatch(signInStart());
+
       const res = await fetch("/api/auth/signin", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
+
       const data = await res.json();
-      if (data.success === false) {
-        dispatch(signInFailure(data.message));
+
+      // ✅ Check success flag
+      if (!data.success) {
+        return dispatch(signInFailure(data.message)); // stay on signin page
       }
-      if (res.ok) {
-        dispatch(signInSuccess(data));
-        navigate("/");
-      }
+
+      // ✅ Success
+      dispatch(signInSuccess(data));
+      navigate("/");
     } catch (error) {
       dispatch(signInFailure(error.message));
-
     }
   };
 
@@ -57,14 +61,14 @@ const Signin = () => {
             or with Google.
           </p>
         </div>
-        {/* right */}
 
+        {/* right */}
         <div className="flex-1">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
               <Label value="Your email" />
               <TextInput
-                type="emailonchange={"
+                type="email"
                 placeholder="name@company.com"
                 id="email"
                 onChange={handleChange}
@@ -86,25 +90,23 @@ const Signin = () => {
             >
               {loading ? (
                 <>
-                  <Spinner
-                    color="pink"
-                    aria-label="Pink spinner example"
-                    size="sm"
-                  />
+                  <Spinner color="pink" aria-label="Pink spinner example" size="sm" />
                   <span className="pl-3">Loading...</span>
                 </>
               ) : (
                 "Sign In"
               )}
             </Button>
-            <OAuth/>
+            <OAuth />
           </form>
           <div className="flex gap-2 text-sm mt-5">
-            <span>Dont Have an account?</span>
+            <span>Don't have an account?</span>
             <Link to="/signup" className="text-blue-500">
               Sign Up
             </Link>
           </div>
+
+          {/* ✅ Show error */}
           {errorMessage && (
             <Alert className="mt-5" color="failure">
               {errorMessage}
