@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Button, Spinner } from "flowbite-react";
 import CommentSection from "../Components/CommentSection";
-import PostCard from "../Components/PostCard";
+import PostCard from "../components/PostCard";
+
 
 const Postpage = () => {
   const { postSlug } = useParams();
