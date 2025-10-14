@@ -23,7 +23,7 @@ const Postpage = () => {
 
         const res = await fetch(`/api/post/getposts?slug=${postSlug}`);
         const data = await res.json();
-        console.log("Single Post API Response:", data);
+        // console.log("Single Post API Response:", data);
 
         if (!res.ok || !data.post) throw new Error("Failed to fetch post");
 
@@ -46,7 +46,7 @@ const Postpage = () => {
         setRecentLoading(true);
         const res = await fetch(`/api/post/getposts?limit=4`);
         const data = await res.json();
-        console.log("Recent Posts API Response:", data);
+        // console.log("Recent Posts API Response:", data);
 
         if (!res.ok) throw new Error("Failed to fetch recent posts");
 
