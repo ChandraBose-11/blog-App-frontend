@@ -12,3 +12,196 @@ body{
     font-size: 1.05rem;
 }
 
+/* About page css */
+
+@keyframes fadeIn {
+  0% { opacity: 0; transform: translateY(30px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  0% { opacity: 0; transform: translateY(50px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes zoomIn {
+  0% { opacity: 0; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.animate-fadeIn { animation: fadeIn 1s ease forwards; }
+.animate-slideUp { animation: slideUp 1s ease forwards; }
+.animate-zoomIn { animation: zoomIn 1s ease forwards; }
+
+.animate-fadeIn.delay-100 { animation-delay: 0.1s; }
+.animate-fadeIn.delay-200 { animation-delay: 0.2s; }
+.animate-fadeIn.delay-300 { animation-delay: 0.3s; }
+.animate-fadeIn.delay-400 { animation-delay: 0.4s; }
+.animate-fadeIn.delay-500 { animation-delay: 0.5s; }
+.animate-fadeIn.delay-600 { animation-delay: 0.6s; }
+.animate-fadeIn.delay-700 { animation-delay: 0.7s; }
+
+.animate-bounce-slow {
+  animation: bounce 5s infinite ease-in-out;
+}
+
+/* Project page style */
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.animate-gradient-text {
+  background-size: 200% 200%;
+  animation: gradient 6s ease infinite;
+}
+
+@keyframes bubble {
+  0% { transform: translateY(0) scale(1); opacity: 0.2; }
+  50% { transform: translateY(-50px) scale(1.2); opacity: 0.4; }
+  100% { transform: translateY(0) scale(1); opacity: 0.2; }
+}
+.animate-bubble {
+  animation: bubble 6s ease-in-out infinite;
+}
+
+/* home page css */
+/* Floating Bubble Animation */
+@keyframes bubble {
+  0% { transform: translateY(0) scale(1); opacity: 0.6; }
+  50% { transform: translateY(-50px) scale(1.2); opacity: 0.8; }
+  100% { transform: translateY(-120px) scale(1); opacity: 0; }
+}
+
+.animate-bubble {
+  animation-name: bubble;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Gradient Text Animation */
+@keyframes gradientText {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-text {
+  background-size: 200% 200%;
+  animation-name: gradientText;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+
+/* FadeIn Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn { animation: fadeIn 1.2s ease-out forwards; }
+
+/* SlideUp Animation */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-slideUp { animation: slideUp 1s ease-out forwards; }
+
+/* ZoomIn Animation */
+@keyframes zoomIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-zoomIn { animation: zoomIn 0.8s ease-out forwards; }
+
+/* Glow animation for hero text */
+@keyframes textGlow {
+  0%, 100% { text-shadow: 0 0 10px rgba(255,255,255,0.6); }
+  50% { text-shadow: 0 0 20px rgba(255,255,255,1); }
+}
+.animate-glow { animation: textGlow 2s ease-in-out infinite; }
+
+/* Category Hover Tilt */
+.category-hover:hover {
+  transform: rotate(-3deg) scale(1.05);
+  transition: transform 0.5s ease;
+}
+
+/* About Card Hover */
+.about-card:hover {
+  transform: translateY(-10px) rotate(-1deg) scale(1.03);
+  transition: all 0.5s ease;
+}
+
+/* Staggered Fade for Posts */
+.stagger-fade {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.8s forwards;
+}
+
+/* {hero section} */
+/* Background: Light pastel version of #dd4ea1 */
+.hero-section {
+  background-color: #ecb5d888; /* much lighter pink */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Heading floating animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Paragraph slide & fade animation */
+@keyframes slideFade {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-slideFade {
+  animation: slideFade 1.5s ease-out forwards;
+}
+
+/* Button gentle pulse animation */
+@keyframes pulseButton {
+  0%, 100% { transform: scale(1); box-shadow: 0 4px 15px rgba(255,255,255,0.3); }
+  50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(255,255,255,0.5); }
+}
+.animate-pulseButton {
+  animation: pulseButton 2.5s ease-in-out infinite;
+}
+
+/* Button hover effect */
+.hero-button {
+  transition: transform 0.3s, background-color 0.3s;
+}
+.hero-button:hover {
+  transform: scale(1.07);
+  background-color: #fff;
+}
+
+/* Bubbles top-to-bottom with zigzag */
+.bubble {
+  position: absolute;
+  top: -40px;
+  border-radius: 50%;
+  animation-name: moveDown;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  opacity: 0.5;
+}
+
+@keyframes moveDown {
+  0% { transform: translateX(0) translateY(0); opacity: 0; }
+  10% { opacity: 0.4; }
+  25% { transform: translateX(50px) translateY(25vh); }
+  50% { transform: translateX(-50px) translateY(50vh); }
+  75% { transform: translateX(30px) translateY(75vh); }
+  100% { transform: translateX(0) translateY(100vh); opacity: 0; }
+}

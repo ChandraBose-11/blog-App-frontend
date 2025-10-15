@@ -15,6 +15,7 @@ import UpdatePost from "./Pages/UpdatePost";
 import Postpage from "./Pages/Postpage";
 import ScrollToTop from "./Components/ScrollToTop";
 import Search from "./Pages/Search";
+import Category from "./pages/Category";
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/project" element={<Project />} />
           <Route path="/signin" element={<Signin />} />
           <Route path="/signup" element={<Signup />} />
+            <Route path="/category/:categoryName" element={<Category />} />
           <Route path="/post/:postSlug" element={<Postpage/>}/>
              <Route path='/search' element={<Search/>} />
           {/* Protected Route for logged-in users */}
