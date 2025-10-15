@@ -151,7 +151,7 @@ const CommentSection = ({ postId }) => {
             <p className='text-gray-500 text-xs'>
               {200 - comment.length} characters remaining
             </p>
-            <Button outline ='purpleToBlue' type='submit'>
+            <Button outline ='purpleToBlue' type='submit'  className="bg-gradient-to-r from-purple-400 to-pink-500 text-white hover:opacity-90">
               Submit
             </Button>
           </div>

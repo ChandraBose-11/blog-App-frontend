@@ -74,7 +74,7 @@ const Comment = ({ comment, onLike, onEdit, onDelete }) => {
               onChange={(e) => setEditedContent(e.target.value)}
             />
             <div className="flex justify-end gap-2 text-xs">
-              <Button type="button" size="sm" onClick={handleSave}>
+              <Button type="button" size="sm" onClick={handleSave}   className="bg-gradient-to-r from-purple-400 to-pink-500 text-white hover:opacity-90">
                 Save
               </Button>
               <Button
@@ -82,6 +82,7 @@ const Comment = ({ comment, onLike, onEdit, onDelete }) => {
                 size="sm"
                 outline
                 onClick={() => setIsEditing(false)}
+                  className="red"
               >
                 Cancel
               </Button>
