@@ -7,42 +7,67 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import axios from "axios";
 
+const CATEGORY_OPTIONS = [
+  { value: "Uncategoried", label: "Uncategoried" },
+  { value: "technology", label: "Technology" },
+  { value: "lifestyle", label: "Lifestyle" },
+  { value: "business", label: "Business & Finance" },
+  { value: "education", label: "Education" },
+  { value: "entertainment", label: "Entertainment" },
+  { value: "news", label: "News" },
+];
+
 const UpdatePost = () => {
   const { postId } = useParams();
   const navigate = useNavigate();
 
   const [file, setFile] = useState(null);
   const [uploadProgress, setUploadProgress] = useState(null);
-  const [formData, setFormData] = useState({
-    title: "",
-    content: "",
-    category: "Uncategoried",
-  });
+  const [formData, setFormData] = useState(null); // initially null to wait for fetch
   const [publishError, setPublishError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
   // Prefill post data
   useEffect(() => {
     if (!postId) return;
+
     const fetchPost = async () => {
       try {
         const res = await axios.get(`/api/post/${postId}`);
-        const post = res.data;
+        const post = res.data && res.data.post ? res.data.post : res.data;
+
+        if (!post) {
+          setPublishError("Failed to fetch post data");
+          return;
+        }
+
+        // Normalize category to match exactly one of the options
+        const matchedCategory =
+          CATEGORY_OPTIONS.find(
+            (opt) =>
+              opt.value.toLowerCase() === (post.category || "").toLowerCase()
+          )?.value || "Uncategoried";
+
         setFormData({
-          title: post.title,
-          content: post.content,
-          category: post.category || "Uncategoried",
+          title: post.title || "",
+          content: post.content || "",
+          category: matchedCategory,
         });
+
         if (post.image) setFile(post.image);
       } catch (err) {
+        console.error("Fetch post error:", err);
         setPublishError("Failed to fetch post data");
       }
     };
+
     fetchPost();
   }, [postId]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    if (!formData) return;
+
     setPublishError(null);
     setSuccessMessage(null);
 
@@ -51,6 +76,7 @@ const UpdatePost = () => {
       data.append("title", formData.title);
       data.append("content", formData.content);
       data.append("category", formData.category);
+
       if (file && file instanceof File) data.append("image", file);
 
       const xhr = new XMLHttpRequest();
@@ -84,6 +110,9 @@ const UpdatePost = () => {
     }
   };
 
+  // Wait for formData to load before rendering
+  if (!formData) return <div className="p-3 text-center">Loading post...</div>;
+
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">Update Post</h1>
@@ -106,13 +135,14 @@ const UpdatePost = () => {
               setFormData({ ...formData, category: e.target.value })
             }
           >
-            <option value="Uncategoried">Select A Category</option>
-            <option value="technology">Technology</option>
-            <option value="lifestyle">Lifestyle</option>
-            <option value="business">Business & Finance</option>
-            <option value="education">Education</option>
-            <option value="entertainment">Entertainment</option>
-            <option value="news">News</option>
+            <option value="" disabled>
+              Select A Category
+            </option>
+            {CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
           </Select>
         </div>
 
@@ -120,7 +150,9 @@ const UpdatePost = () => {
           <FileInput
             type="file"
             accept="image/*"
-            onChange={(e) => setFile(e.target.files[0])}
+            onChange={(e) => {
+              if (e.target.files && e.target.files[0]) setFile(e.target.files[0]);
+            }}
           />
           {uploadProgress !== null && (
             <div className="w-16 h-16">
