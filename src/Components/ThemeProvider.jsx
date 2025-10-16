@@ -1,14 +1,23 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+// src/Components/ThemeProvider.jsx
+import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 
-const ThemeProvider = ({children}) => {
-    const {theme}=useSelector(state => state.theme)
-    return (
-        <div className={theme}>
-            <div className='bg-white text-gray-700 dark:text-gray-200 dark:bg=[rgb(16,23,42)]'></div>
-            {children}
-        </div>
-    );
+const ThemeProvider = ({ children }) => {
+  const { theme } = useSelector((state) => state.theme);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    if (theme === "dark") html.classList.add("dark");
+    else html.classList.remove("dark");
+
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  return (
+    <div className="min-h-screen bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-100 transition-all duration-300">
+      {children}
+    </div>
+  );
 };
 
 export default ThemeProvider;

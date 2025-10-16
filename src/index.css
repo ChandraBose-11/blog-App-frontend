@@ -3,6 +3,7 @@
 @source "../.flowbite-react/class-list.json";
 @plugin 'tailwind-scrollbar';
 
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 body{
